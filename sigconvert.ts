@@ -10,7 +10,8 @@ type csig_t =
     mask: string;
 }
 
-const _SIG_HEXREG = '[0-9a-fA-F]{1,2}'
+const _SIG_HEXREG = '[0-9a-fA-F]{1,2}';
+var _Sig_usechars = false;
 
 function Sig_ToCstyle(bytes: number[], mask: boolean[]): csig_t | null
 {
@@ -27,7 +28,7 @@ function Sig_ToCstyle(bytes: number[], mask: boolean[]): csig_t | null
             return null;
         }
         
-        var istext = bytes[i] >= 32 /* SPACE */ && bytes[i] <= 126 /* TILDE */;
+        var istext = _Sig_usechars && bytes[i] >= 32 /* SPACE */ && bytes[i] <= 126 /* TILDE */;
         var ishex = istext &&
             ((bytes[i] >= 48 /* '0' */ && bytes[i] <= 57 /* '9' */) ||
             (bytes[i] >= 97 /* 'a' */ && bytes[i] <= 102 /* 'f' */ ) ||
@@ -173,7 +174,6 @@ function Sig_FromIDAstyle(bytes: string) : jssig_t | null
                 return null;
             }
             
-            console.log(`${match[0]}, ${num.toString(16)}`)
             out.bytes.push(num);
             out.mask.push(true);
             i += match.length /*- 1*/;
@@ -191,6 +191,9 @@ function _Sig_GetCstyle(): HTMLInputElement {
 }
 function _Sig_GetMask(): HTMLInputElement {
     return <HTMLInputElement>document.getElementById('mask');
+}
+function _Sig_GetUseChars(): HTMLInputElement {
+    return <HTMLInputElement>document.getElementById('usechars');
 }
 
 function _Sig_UpdateAll(sig: jssig_t): void {
@@ -217,10 +220,12 @@ function Sig_OnEdit(caller: string): void
     var sig:jssig_t = null;
     var csig:csig_t = null;
     var idasig:string = null;
-
+    
+    
     if (caller == 'cstyle' || caller == 'mask') {
         sig = Sig_FromCstyle(cstyle.value, mask.value);
-    } else if (caller == 'idastyle') {
+    } else {
+        if (caller == 'usechars') {  _Sig_usechars = _Sig_GetUseChars().checked; }
         sig = Sig_FromIDAstyle(idastyle.value);
     }
     

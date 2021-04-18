@@ -6,10 +6,11 @@
     </head>
     <body>
         <label>C-style</label><br>
-        <input type="text" id="cstyle" oninput="Sig_OnEdit('cstyle')"><br>
+        <input type="text" id="cstyle" oninput="Sig_OnEdit('cstyle')">
+        <input type="checkbox", id="usechars", oninput="Sig_OnEdit('usechars')"> <label>Use printable hex chars (ex: '\x50' becomes 'P')</label><br>
         <label>C-style mask</label><br>
         <input type="text" id="mask" oninput="Sig_OnEdit('mask')"><br>
         <label>IDA-style</label><br>
-        <input type="text" id="idastyle" oninput="Sig_OnEdit('idastyle')"><br>
+        <input type="text" id="idastyle" oninput="Sig_OnEdit('idastyle')">
     </body>
 </html>
